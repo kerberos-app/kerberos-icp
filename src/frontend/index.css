@@ -1,14 +1,40 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
 @import "@nfid/identitykit/react/styles.css";
 
 @theme {
-  --font-display: "Arial", "sans-serif";
+  --font-display: "Montserrat", "Arial", "sans-serif";
+  --font-family: "Montserrat", "Arial", "sans-serif";
   --animate-float: float 3s ease-in;
+  --animate-fade-in: fadeIn 0.8s ease-out;
+  --animate-fade-in-up: fadeInUp 0.8s ease-out;
 
   @keyframes float {
-    to {
-      transform: translateY(-800%);
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
       opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
     }
   }
 }
@@ -16,6 +42,7 @@
 /* Base styles */
 body {
   @apply antialiased text-gray-800;
+  font-family: 'Montserrat', sans-serif;
 }
 
 /* Remove default styles from App.tsx */
@@ -29,5 +56,211 @@ main {
 }
 
 h1 {
-  @apply font-medium text-4xl text-black;
+  @apply font-medium text-4xl;
+  font-family: 'Montserrat', sans-serif;
+}
+
+/* Custom animation classes */
+.animate-fade-in {
+  animation: fadeIn 0.8s ease-out;
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.8s ease-out;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Enhanced background animations */
+.animate-float-slow {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-float-reverse {
+  animation: floatReverse 4s ease-in-out infinite;
+}
+
+.animate-grid-fade {
+  animation: gridFade 8s ease-in-out infinite;
+}
+
+.animate-line-sweep {
+  animation: lineSweep 4s ease-in-out infinite;
+}
+
+.animate-line-sweep-vertical {
+  animation: lineSweepVertical 4s ease-in-out infinite;
+}
+
+.animate-particle {
+  animation: particle 7s ease-in-out infinite;
+}
+
+.animate-float-rotate {
+  animation: floatRotate 7s ease-in-out infinite;
+}
+
+.animate-float-triangle {
+  animation: floatTriangle 6s ease-in-out infinite;
+}
+
+.animate-float-polygon {
+  animation: floatPolygon 8s ease-in-out infinite;
+}
+
+.animate-float-diamond {
+  animation: floatDiamond 5s ease-in-out infinite;
+}
+
+/* Animation delays */
+.delay-300 {
+  animation-delay: 0.3s;
+}
+
+.delay-500 {
+  animation-delay: 0.5s;
+}
+
+.delay-700 {
+  animation-delay: 0.7s;
+}
+
+.delay-1000 {
+  animation-delay: 1s;
+}
+
+.delay-2000 {
+  animation-delay: 2s;
+}
+
+.delay-3000 {
+  animation-delay: 3s;
+}
+
+/* Enhanced keyframe animations */
+@keyframes floatReverse {
+  0%, 100% {
+    transform: translateY(0px) translateX(0px);
+  }
+  25% {
+    transform: translateY(-15px) translateX(10px);
+  }
+  50% {
+    transform: translateY(-5px) translateX(-5px);
+  }
+  75% {
+    transform: translateY(10px) translateX(15px);
+  }
+}
+
+@keyframes gridFade {
+  0%, 100% {
+    opacity: 0.02;
+  }
+  50% {
+    opacity: 0.08;
+  }
+}
+
+@keyframes lineSweep {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes lineSweepVertical {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes particle {
+  0% {
+    transform: translateY(0px) translateX(0px);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100px) translateX(50px);
+    opacity: 0;
+  }
+}
+
+@keyframes floatRotate {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-30px) rotate(12deg);
+  }
+}
+
+@keyframes floatTriangle {
+  0%, 100% {
+    transform: translateY(0) translateX(0) scale(1);
+  }
+  40% {
+    transform: translateY(-20px) translateX(10px) scale(1.08);
+  }
+  70% {
+    transform: translateY(10px) translateX(-10px) scale(0.95);
+  }
+}
+
+@keyframes floatPolygon {
+  0%, 100% {
+    transform: translateY(0) scale(1) rotate(0deg);
+  }
+  30% {
+    transform: translateY(-18px) scale(1.1) rotate(8deg);
+  }
+  60% {
+    transform: translateY(12px) scale(0.95) rotate(-8deg);
+  }
+}
+
+@keyframes floatDiamond {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-15px) rotate(20deg);
+  }
+}
+
+/* Dark mode overrides for NFID Identity Kit */
+.identitykit-connect-button {
+  @apply bg-gray-800 border-gray-700 text-white hover:bg-gray-700;
+}
+
+.identitykit-connect-button:hover {
+  @apply border-purple-500;
+}
+
+/* Montserrat font family for all elements */
+* {
+  font-family: 'Montserrat', sans-serif;
 }

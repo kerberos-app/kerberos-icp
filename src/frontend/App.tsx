@@ -1,172 +1,97 @@
-import { useState, useEffect } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { ConnectWallet, useAgent } from "@nfid/identitykit/react"
-import { Actor, HttpAgent } from '@dfinity/agent';
-import { idlFactory } from '../backend/declarations';
+import { useNavigate } from 'react-router-dom';
+import logo from './assets/logo_transparent.png';
+import dfinityLogo from './assets/dfinity-logo.svg';
+import AnimatedBackground from './components/AnimatedBackground';
 
 function App() {
-  const [name, setName] = useState<string>('');
-  const [unauthenticatedAgent, setUnauthenticatedAgent] = useState<HttpAgent | undefined>();
-  const authenticatedAgent = useAgent({
-    host: import.meta.env.VITE_DFX_NETWORK === "ic" ? "https://ic0.app" : "http://localhost:4943",
-  });
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    const host = import.meta.env.VITE_DFX_NETWORK === "ic" ? "https://ic0.app" : "http://localhost:4943";
-    
-    HttpAgent.create({ host }).then((agent) => {
-      if (import.meta.env.VITE_DFX_NETWORK !== "ic") {
-        agent.fetchRootKey().catch((err) => {
-          console.warn("Unable to fetch root key. Check your local replica is running");
-          console.error(err);
-        });
-      }
-      setUnauthenticatedAgent(agent);
-    });
-  }, []);
-
-  const greetQuery = useQuery({
-    queryKey: ['greet', name],
-    queryFn: async () => {
-      if (!name) return 'Enter your name';
-      if (!unauthenticatedAgent) return 'Agent not initialized';
-
-      const actor = Actor.createActor(idlFactory, {
-        agent: unauthenticatedAgent,
-        canisterId: import.meta.env.VITE_CANISTER_ID_BACKEND!,
-      });
-
-      return await actor.greet(name) as string;
-    },
-    enabled: !!name && !!unauthenticatedAgent,
-  });
-  
-  const connectedWalletQuery = useQuery({
-    queryKey: ['greetConnected'],
-    queryFn: async () => {
-      if (!authenticatedAgent) return 'Wallet not connected';
-      
-      if (import.meta.env.VITE_DFX_NETWORK !== "ic") {
-        await authenticatedAgent?.fetchRootKey();
-      }
-      
-      const actor = Actor.createActor(idlFactory, {
-        agent: authenticatedAgent,
-        canisterId: import.meta.env.VITE_CANISTER_ID_BACKEND || '',
-      });
-      
-      const principal = await authenticatedAgent.getPrincipal();
-      console.log(principal.toHex())
-      try {
-        const response = await actor.greet(principal?.toString() ?? "me");
-        return response as string;
-      } catch (error) {
-        console.error("Error calling greet_no_consent:", error);
-        return `Error: ${error instanceof Error ? error.message : String(error)}`;
-      }
-    },
-    enabled: !!authenticatedAgent,
-  });
-
-  const whoAmIQuery = useQuery({
-    queryKey: ['whoAmI'],
-    queryFn: async () => {
-      if (!authenticatedAgent) return 'Wallet not connected';
-      
-      if (import.meta.env.VITE_DFX_NETWORK !== "ic") {
-        await authenticatedAgent?.fetchRootKey();
-      }
-      
-      const actor = Actor.createActor(idlFactory, {
-        agent: authenticatedAgent,
-        canisterId: import.meta.env.VITE_CANISTER_ID_BACKEND!
-      });
-      
-      try {
-        const response = await actor.whoami();
-        return response as string;
-      } catch (error) {
-        console.error("Error calling greet_no_consent:", error);
-        return `Error: ${error instanceof Error ? error.message : String(error)}`;
-      }
-    },
-    enabled: !!authenticatedAgent,
-  });
+  const handleEnterVault = () => {
+    void navigate('/login');
+  };
 
   return (
-    <main className="min-h-screen bg-gray-100 p-8">
-      <div className="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl p-6">
-        <h1 className="text-2xl font-bold text-center mb-6">IC App</h1>
-        <ConnectWallet />
-        {/* Greeting Section */}
-        <div className="mb-8">
-          <h2 className="text-xl font-semibold mb-4">Greeting</h2>
-          <div className="flex gap-2 mb-4">
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Enter your name"
-              className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            <button
-              onClick={() => greetQuery.refetch()}
-              className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              Greet
-            </button>
-          </div>
-          <div className="p-4 bg-gray-50 rounded-md">
-            {greetQuery.isLoading ? (
-              <p>Loading...</p>
-            ) : greetQuery.isError ? (
-              <p className="text-red-500">Error: {(greetQuery.error as Error).message}</p>
-            ) : (
-              <p>{greetQuery.data}</p>
-            )}
-          </div>
-        </div>
-        
-        <div className="mb-8">
-          <h2 className="text-xl font-semibold mb-4">Connected Wallet Greeting</h2>
-          <button
-            onClick={() => connectedWalletQuery.refetch()}
-            className="w-full px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 mb-4"
-          >
-            Greet Connected Wallet
-          </button>
-          <div className="p-4 bg-gray-50 rounded-md">
-            {connectedWalletQuery.isLoading ? (
-              <p>Loading...</p>
-            ) : connectedWalletQuery.isError ? (
-              <p className="text-red-500">Error: {(connectedWalletQuery.error as Error).message}</p>
-            ) : (
-              <p>{connectedWalletQuery.data}</p>
-            )}
-          </div>
-        </div>
+          <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 relative overflow-hidden">
+        <AnimatedBackground />
 
-        <div className="mb-8">
-          <h2 className="text-xl font-semibold mb-4">Who Am I</h2>
-          <button
-            onClick={() => whoAmIQuery.refetch()}
-            className="w-full px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"
-          >
-            Who Am I
-          </button>
-          <div className="p-4 bg-gray-50 rounded-md">
-            {whoAmIQuery.isLoading ? (
-              <p>Loading...</p>
-            ) : whoAmIQuery.isError ? (
-              <p className="text-red-500">Error: {(whoAmIQuery.error as Error).message}</p>
-            ) : (
-              <p>{whoAmIQuery.data}</p>
-            )}
+        {/* Main Content */}
+        <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4">
+          {/* Logo and Title */}
+          <div className="text-center mb-12">
+            <div className="mb-8 animate-fade-in">
+              <img 
+                src={logo} 
+                alt="Kerberos Logo" 
+                className="w-64 h-64 md:w-80 md:h-80 mx-auto mb-6 drop-shadow-2xl"
+              />
+            </div>
+            <h1 className="text-5xl md:text-7xl font-semibold tracking-widest text-white drop-shadow-lg mb-2 animate-fade-in-up">
+              KERBEROS
+            </h1>
+            <div className="w-40 md:w-64 h-2 mx-auto mb-6 rounded-full bg-gradient-to-r from-[#F15A24] via-[#FBB03B] to-[#ED1E79] opacity-90 animate-fade-in-up"></div>
+            <p className="text-xl md:text-2xl text-gray-300 mb-8 animate-fade-in-up delay-300">
+              Passwords. Protected. Permanently.
+            </p>
+            <p className="text-lg text-gray-400 max-w-2xl mx-auto animate-fade-in-up delay-500">
+              The decentralized password manager built on the Internet Computer.
+            </p>
+
+            <div className="flex justify-center animate-fade-in-up delay-700 mt-8">
+              <button
+                onClick={handleEnterVault}
+                className="px-8 py-4 bg-gradient-to-r from-[#F15A24] to-[#ED1E79] text-white font-semibold rounded-xl hover:bg-gradient-to-l hover:from-[#F15A24] hover:to-[#ED1E79] transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-[#F15A24]/25"
+              >
+                Enter the Vault
+              </button>
+            </div>
+          </div>
+
+          {/* Three Pillars */}
+          <div className="grid md:grid-cols-3 gap-8 mb-12 max-w-4xl w-full animate-fade-in-up delay-700">
+            <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/50 hover:border-purple-500/50 transition-all duration-300 hover:transform hover:scale-105">
+              <div className="w-12 h-12 bg-[#F15A24]/20 rounded-xl flex items-center justify-center mb-4">
+                <svg className="w-6 h-6 text-[#FBB03B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold text-white mb-2">Security</h3>
+              <p className="text-gray-400">End-to-end encryption with client-side decryption. Your secrets stay yours.</p>
+            </div>
+
+            <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/50 hover:border-blue-500/50 transition-all duration-300 hover:transform hover:scale-105">
+              <div className="w-12 h-12 bg-[#ED1E79]/20 rounded-xl flex items-center justify-center mb-4">
+                <svg className="w-6 h-6 text-[#522785]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold text-white mb-2">Privacy</h3>
+              <p className="text-gray-400">Internet Identity integration with zero data collection or tracking.</p>
+            </div>
+
+            <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/50 hover:border-green-500/50 transition-all duration-300 hover:transform hover:scale-105">
+              <div className="w-12 h-12 bg-[#29ABE2]/20 rounded-xl flex items-center justify-center mb-4">
+                <svg className="w-6 h-6 text-[#29ABE2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9v-9m0-9v9m0-9c-5 0-9 4-9 9s4 9 9 9" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold text-white mb-2">Decentralization</h3>
+              <p className="text-gray-400">Stored on ICP canisters with zero infrastructure dependencies.</p>
+            </div>
+          </div>
+
+
+
+          {/* Footer */}
+          <div className="absolute bottom-8 text-center text-gray-500 text-sm">
+            <div className="flex items-center justify-center gap-2 mb-2">
+              <span>Built on the Internet Computer</span>
+              <img src={dfinityLogo} alt="DFinity" className="w-6 h-3" />
+            </div>
+            <p className="mb-2">Powered by vetKeys</p>
+            <p className="text-xs text-gray-600">#WCHL2025 - Team BlockCraft</p>
           </div>
         </div>
-      
-      </div>
-    </main>
+    </div>
   );
 }
 
