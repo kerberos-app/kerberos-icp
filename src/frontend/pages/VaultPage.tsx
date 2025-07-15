@@ -164,30 +164,82 @@ function VaultPage() {
 
         </aside>
 
-        <main className="flex-1 flex flex-col min-h-0">
-          <div className="flex-1 flex items-center justify-center">
-            <div className="text-center">
-              <div className="flex items-center justify-center w-20 h-20 bg-[#F15A24]/20 rounded-full mx-auto mb-6">
-                <svg className="w-10 h-10 text-[#FBB03B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                </svg>
-              </div>
-              <h3 className="text-3xl font-bold text-white mb-4">Your Vault is Empty</h3>
-              <p className="text-gray-300 mb-8 max-w-md mx-auto">
-                Start by adding your first password to begin securing your digital life.
-              </p>
-              <button className="px-8 py-3 bg-gradient-to-r from-[#F15A24] to-[#ED1E79] text-white font-semibold rounded-xl hover:shadow-lg transition-all duration-300 transform hover:scale-105">
-                Add First Password
-              </button>
-              
-              {/* Footer - Bottom of empty state */}
-              <div className="mt-16 pt-8 border-t border-gray-700/50">
-                <div className="flex items-center justify-center gap-2 text-gray-500 text-sm">
-                  <span>Secured by Internet Identity & vetKeys</span>
-                  <img src={dfinityLogo} alt="DFinity" className="w-4 h-2" />
+        {/* Main Content Area - 3 Column Layout */}
+        <main className="flex-1 flex min-h-0">
+          {/* Items List Panel */}
+          <div className="w-80 bg-gray-800/20 backdrop-blur-sm border-r border-gray-700/50 flex flex-col">
+            {/* Search & Toolbar */}
+            <div className="p-4 border-b border-gray-700/50">
+              <div className="relative mb-4">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
                 </div>
-                <p className="text-xs text-gray-600 text-center mt-1">#WCHL2025 - Team BlockCraft</p>
+                <input
+                  type="text"
+                  placeholder="Search vault..."
+                  className="w-full pl-10 pr-4 py-2 bg-gray-700/50 border border-gray-600/50 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/50 focus:border-[#F15A24]/50"
+                />
               </div>
+              
+              {/* Filter Buttons */}
+              <div className="flex gap-2">
+                <button className="px-3 py-1 text-xs bg-[#F15A24]/20 text-[#F15A24] border border-[#F15A24]/30 rounded-lg font-medium">
+                  All
+                </button>
+                <button className="px-3 py-1 text-xs text-gray-400 border border-gray-600/50 rounded-lg hover:bg-gray-700/30 transition-colors">
+                  Logins
+                </button>
+                <button className="px-3 py-1 text-xs text-gray-400 border border-gray-600/50 rounded-lg hover:bg-gray-700/30 transition-colors">
+                  Notes
+                </button>
+              </div>
+            </div>
+
+            {/* Items List */}
+            <div className="flex-1 overflow-y-auto">
+              {/* Empty State */}
+              <div className="p-8 text-center">
+                <div className="w-12 h-12 bg-gray-700/50 rounded-lg flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                  </svg>
+                </div>
+                <h4 className="text-lg font-semibold text-white mb-2">No items yet</h4>
+                <p className="text-sm text-gray-400 mb-4">Start by adding your first password</p>
+                <button className="px-4 py-2 bg-gradient-to-r from-[#F15A24] to-[#ED1E79] text-white text-sm font-medium rounded-lg hover:shadow-lg transition-all duration-200">
+                  Add Item
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Details Panel */}
+          <div className="flex-1 flex flex-col">
+            {/* Details Content */}
+            <div className="flex-1 flex items-center justify-center">
+              <div className="text-center max-w-md">
+                <div className="flex items-center justify-center w-20 h-20 bg-gray-700/30 rounded-full mx-auto mb-6">
+                  <svg className="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                </div>
+                <h3 className="text-2xl font-bold text-white mb-4">Select an item</h3>
+                <p className="text-gray-400">
+                  Choose an item from the list to view its details, or create your first password to get started.
+                </p>
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="p-4 border-t border-gray-700/50">
+              <div className="flex items-center justify-center gap-2 text-gray-500 text-sm">
+                <span>Secured by Internet Identity & vetKeys</span>
+                <img src={dfinityLogo} alt="DFinity" className="w-4 h-2" />
+              </div>
+              <p className="text-xs text-gray-600 text-center mt-1">#WCHL2025 - Team BlockCraft</p>
             </div>
           </div>
         </main>
