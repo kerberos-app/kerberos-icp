@@ -13,13 +13,14 @@
     "deploy:ic": "dfx deploy --network ic",
     "generate:backend": "dfx generate backend",
     "generate:frontend": "dfx generate frontend",
-    "generate:all": "dfx generate"
+    "generate:all": "dfx generate",
+    "deploy:frontend": "npm run build && dfx deploy frontend --network local" 
   },
   "dependencies": {
     "@dfinity/agent": "^2.3.0",
-    "@dfinity/auth-client": "^2.3.0",
+    "@dfinity/auth-client": "^2.4.1",
     "@dfinity/candid": "^2.3.0",
-    "@dfinity/identity": "^2.3.0",
+    "@dfinity/identity": "^2.4.1",
     "@dfinity/ledger-icp": "^2.6.11",
     "@dfinity/principal": "^2.3.0",
     "@dfinity/utils": "^2.11.0",

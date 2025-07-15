@@ -15,6 +15,10 @@
         "src/frontend/dist"
       ],
       "type": "assets"
+    },
+    "internet-identity": {
+      "type": "pull",
+      "id": "rdmx6-jaaaa-aaaaa-aaadq-cai"
     }
   },
   "defaults": {
