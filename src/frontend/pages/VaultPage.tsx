@@ -224,21 +224,26 @@ function VaultPage() {
                 <input
                   type="text"
                   placeholder="Search vault..."
-                  className="w-full pl-10 pr-4 py-2 bg-gray-700/50 border border-gray-600/50 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/50 focus:border-[#F15A24]/50"
+                  className="w-full pl-10 pr-10 py-2 bg-gray-700/50 border border-gray-600/50 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/50 focus:border-[#F15A24]/50"
                 />
+                <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
+                  <button className="text-gray-400 hover:text-white transition-colors" title="Advanced Search">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4" />
+                    </svg>
+                  </button>
+                </div>
               </div>
               
-              {/* Filter Buttons */}
-              <div className="flex gap-2">
-                <button className="px-3 py-1 text-xs bg-[#F15A24]/20 text-[#F15A24] border border-[#F15A24]/30 rounded-lg font-medium">
-                  All
+              {/* Sort & Filter Info */}
+              <div className="flex items-center justify-between text-xs">
+                <button className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors">
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" />
+                  </svg>
+                  <span>Name A→Z</span>
                 </button>
-                <button className="px-3 py-1 text-xs text-gray-400 border border-gray-600/50 rounded-lg hover:bg-gray-700/30 transition-colors">
-                  Logins
-                </button>
-                <button className="px-3 py-1 text-xs text-gray-400 border border-gray-600/50 rounded-lg hover:bg-gray-700/30 transition-colors">
-                  Notes
-                </button>
+                <span className="text-gray-500">0 items</span>
               </div>
             </div>
 
