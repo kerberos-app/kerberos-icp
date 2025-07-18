@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import IdentityModal from '../components/IdentityModal';
 import dfinityLogo from '../assets/dfinity-logo.svg';
+import { mockVaultItems, mockSpaces, getFavoriteItems, getRecentItems } from '../data/mockData';
+import { VaultItem } from '../types/vault';
 
 function VaultPage() {
   const { isAuthenticated, principal, logout, loading } = useAuth();
