@@ -264,3 +264,8 @@ h1 {
 * {
   font-family: 'Montserrat', sans-serif;
 }
+
+/* Toast animation */
+.animate-fade-in-up {
+  animation: fadeInUp 0.3s ease-out;
+}

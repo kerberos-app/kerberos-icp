@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import IdentityModal from '../components/IdentityModal';
+import Toast from '../components/Toast';
 import dfinityLogo from '../assets/dfinity-logo.svg';
 import { mockVaultItems, getFavoriteItems, getRecentItems } from '../data/mockData';
 import { CardData, LoginData, VaultItem } from '../types/vault';
@@ -13,6 +14,8 @@ function VaultPage() {
   const [selectedItem, setSelectedItem] = useState<VaultItem | null>(null);
   const [currentView, setCurrentView] = useState<'all' | 'favorites' | 'recent' | string>('all');
   const [showPassword, setShowPassword] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+  const [showToast, setShowToast] = useState(false);
   
   // Get items based on current view
   const getDisplayItems = () => {
@@ -27,11 +30,15 @@ function VaultPage() {
     }
   };
 
-  const copyToClipboard = async (text: string) => {
+  const copyToClipboard = async (text: string, fieldName: string) => {
     try {
       await navigator.clipboard.writeText(text);
+      setToastMessage(`${fieldName} copied to clipboard`);
+      setShowToast(true);
     } catch (err) {
       console.error('Failed to copy text: ', err);
+      setToastMessage('Failed to copy to clipboard');
+      setShowToast(true);
     }
   };
 
@@ -420,7 +427,7 @@ function VaultPage() {
                          <div className="flex items-center gap-3 p-3 bg-gray-700/30 rounded-lg border border-gray-600/50">
                            <span className="flex-1 text-white font-mono">{(selectedItem.data as LoginData).username}</span>
                            <button 
-                             onClick={() => copyToClipboard((selectedItem.data as LoginData).username)}
+                             onClick={() => copyToClipboard((selectedItem.data as LoginData).username, 'Username')}
                              className="p-1 text-gray-400 hover:text-white transition-colors" 
                              title="Copy username"
                            >
@@ -455,7 +462,7 @@ function VaultPage() {
                              )}
                            </button>
                            <button 
-                             onClick={() => copyToClipboard((selectedItem.data as LoginData).password)}
+                             onClick={() => copyToClipboard((selectedItem.data as LoginData).password, 'Password')}
                              className="p-1 text-gray-400 hover:text-white transition-colors" 
                              title="Copy password"
                            >
@@ -481,7 +488,7 @@ function VaultPage() {
                              </svg>
                            </button>
                            <button 
-                             onClick={() => copyToClipboard((selectedItem.data as LoginData).url)}
+                             onClick={() => copyToClipboard((selectedItem.data as LoginData).url, 'URL')}
                              className="p-1 text-gray-400 hover:text-white transition-colors" 
                              title="Copy URL"
                            >
@@ -512,7 +519,7 @@ function VaultPage() {
                          <div className="flex items-center gap-3 p-3 bg-gray-700/30 rounded-lg border border-gray-600/50">
                            <span className="flex-1 text-white">{(selectedItem.data as CardData).cardholderName}</span>
                            <button 
-                             onClick={() => copyToClipboard((selectedItem.data as CardData).cardholderName)}
+                             onClick={() => copyToClipboard((selectedItem.data as CardData).cardholderName, 'Cardholder name')}
                              className="p-1 text-gray-400 hover:text-white transition-colors" 
                              title="Copy name"
                            >
@@ -529,7 +536,7 @@ function VaultPage() {
                          <div className="flex items-center gap-3 p-3 bg-gray-700/30 rounded-lg border border-gray-600/50">
                            <span className="flex-1 text-white font-mono">{(selectedItem.data as CardData).number}</span>
                            <button 
-                             onClick={() => copyToClipboard((selectedItem.data as CardData).number)}
+                             onClick={() => copyToClipboard((selectedItem.data as CardData).number, 'Card number')}
                              className="p-1 text-gray-400 hover:text-white transition-colors" 
                              title="Copy number"
                            >
@@ -553,7 +560,7 @@ function VaultPage() {
                           <div className="flex items-center gap-3 p-3 bg-gray-700/30 rounded-lg border border-gray-600/50">
                             <span className="flex-1 text-white font-mono">{(selectedItem.data as CardData).cvv}</span>
                                                          <button 
-                               onClick={() => copyToClipboard((selectedItem.data as CardData).cvv)}
+                               onClick={() => copyToClipboard((selectedItem.data as CardData).cvv, 'CVV')}
                                className="p-1 text-gray-400 hover:text-white transition-colors" 
                                title="Copy CVV"
                              >
@@ -611,6 +618,13 @@ function VaultPage() {
       <IdentityModal 
         isOpen={isIdentityModalOpen} 
         onClose={() => setIsIdentityModalOpen(false)} 
+      />
+
+      {/* Toast Notification */}
+      <Toast
+        message={toastMessage}
+        isVisible={showToast}
+        onClose={() => setShowToast(false)}
       />
     </div>
   );
