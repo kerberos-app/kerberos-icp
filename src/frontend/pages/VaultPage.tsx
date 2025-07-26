@@ -4,6 +4,8 @@ import { useAuth } from '../contexts/AuthContext';
 import IdentityModal from '../components/IdentityModal';
 import Toast from '../components/Toast';
 import VaultHeader from '../components/VaultHeader';
+import VaultSidebar from '../components/VaultSidebar';
+import ItemList from '../components/ItemList';
 import dfinityLogo from '../assets/dfinity-logo.svg';
 import { mockVaultItems, getFavoriteItems, getRecentItems } from '../data/mockData';
 import { CardData, LoginData, VaultItem } from '../types/vault';
@@ -87,223 +89,23 @@ function VaultPage() {
       {/* Main Vault Layout */}
       <div className="flex h-[calc(100vh-80px)]">
         {/* Sidebar */}
-        <aside className="w-64 bg-gray-800/30 backdrop-blur-sm border-r border-gray-700/50 flex flex-col">
-          {/* Sidebar Header */}
-          <div className="p-4 border-b border-gray-700/50">
-            <button className="w-full flex items-center gap-3 px-3 py-2 bg-gradient-to-r from-[#F15A24] to-[#ED1E79] text-white font-semibold rounded-lg hover:shadow-lg transition-all duration-200">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-              </svg>
-              Add Item
-            </button>
-          </div>
-
-          {/* Navigation */}
-          <nav className="flex-1 p-4 overflow-y-auto">
-            {/* Quick Access */}
-            <div className="space-y-2 mb-6">
-              {/* All Items */}
-              <button 
-                onClick={() => setCurrentView('all')}
-                className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
-                  currentView === 'all' ? 'text-white bg-gray-700/50' : 'text-gray-400 hover:bg-gray-700/30 hover:text-white'
-                }`}
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                </svg>
-                <span className="font-medium">All Items</span>
-                <span className="ml-auto text-xs text-gray-400 bg-gray-700/50 px-2 py-1 rounded-full">{mockVaultItems.length}</span>
-              </button>
-
-              <button 
-                onClick={() => setCurrentView('favorites')}
-                className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
-                  currentView === 'favorites' ? 'text-white bg-gray-700/50' : 'text-gray-400 hover:bg-gray-700/30 hover:text-white'
-                }`}
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
-                </svg>
-                <span className="font-medium">Favorites</span>
-                <span className="ml-auto text-xs text-gray-500 bg-gray-700/30 px-2 py-1 rounded-full">{getFavoriteItems().length}</span>
-              </button>
-
-              {/* Recently Used */}
-              <button 
-                onClick={() => setCurrentView('recent')}
-                className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
-                  currentView === 'recent' ? 'text-white bg-gray-700/50' : 'text-gray-400 hover:bg-gray-700/30 hover:text-white'
-                }`}
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <span className="font-medium">Recently Used</span>
-              </button>
-            </div>
-
-            {/* Spaces Section */}
-            <div>
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Spaces</h3>
-                <button className="p-1 text-gray-400 hover:text-white rounded transition-colors" title="Add Space">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                  </svg>
-                </button>
-              </div>
-
-              <div className="space-y-1">
-                <button className="w-full flex items-center gap-3 px-3 py-2 text-gray-300 rounded-lg hover:bg-gray-700/30 hover:text-white transition-colors group">
-                  <div className="w-6 h-6 bg-gradient-to-br from-[#F15A24] to-[#FBB03B] rounded-md flex items-center justify-center">
-                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                    </svg>
-                  </div>
-                  <span className="font-medium flex-1 text-left">Personal</span>
-                  <span className="text-xs text-gray-500 bg-gray-700/30 px-2 py-1 rounded-full group-hover:text-gray-400">0</span>
-                </button>
-
-                <button className="w-full flex items-center gap-3 px-3 py-2 text-gray-300 rounded-lg hover:bg-gray-700/30 hover:text-white transition-colors group">
-                  <div className="w-6 h-6 bg-gradient-to-br from-[#522785] to-[#29ABE2] rounded-md flex items-center justify-center">
-                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0H8m8 0v6l-3-3H5a2 2 0 00-2 2v6a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2z" />
-                    </svg>
-                  </div>
-                  <span className="font-medium flex-1 text-left">Work</span>
-                  <span className="text-xs text-gray-500 bg-gray-700/30 px-2 py-1 rounded-full group-hover:text-gray-400">0</span>
-                </button>
-
-                <button className="w-full flex items-center gap-3 px-3 py-2 text-gray-300 rounded-lg hover:bg-gray-700/30 hover:text-white transition-colors group">
-                  <div className="w-6 h-6 bg-gradient-to-br from-[#ED1E79] to-[#FBB03B] rounded-md flex items-center justify-center">
-                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                    </svg>
-                  </div>
-                  <span className="font-medium flex-1 text-left">Family</span>
-                  <span className="text-xs text-gray-500 bg-gray-700/30 px-2 py-1 rounded-full group-hover:text-gray-400">0</span>
-                </button>
-              </div>
-            </div>
-          </nav>
-
-
-        </aside>
+        <VaultSidebar
+          currentView={currentView}
+          onViewChange={(view) => {
+            setCurrentView(view);
+          }}
+        />
 
         {/* Main Content Area - 3 Column Layout */}
         <main className="flex-1 flex min-h-0">
           {/* Items List Panel */}
-          <div className="w-80 bg-gray-800/20 backdrop-blur-sm border-r border-gray-700/50 flex flex-col">
-            {/* Search & Toolbar */}
-            <div className="p-4 border-b border-gray-700/50">
-              <div className="relative mb-4">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                  </svg>
-                </div>
-                <input
-                  type="text"
-                  placeholder="Search vault..."
-                  className="w-full pl-10 pr-10 py-2 bg-gray-700/50 border border-gray-600/50 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#F15A24]/50 focus:border-[#F15A24]/50"
-                />
-                <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
-                  <button className="text-gray-400 hover:text-white transition-colors" title="Advanced Search">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4" />
-                    </svg>
-                  </button>
-                </div>
-              </div>
-              
-              {/* Sort & Filter Info */}
-              <div className="flex items-center justify-between text-xs">
-                <button className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors">
-                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" />
-                  </svg>
-                  <span>Name A→Z</span>
-                </button>
-                <span className="text-gray-500">{getDisplayItems().length} items</span>
-              </div>
-            </div>
-
-            {/* Items List */}
-            <div className="flex-1 overflow-y-auto">
-              {getDisplayItems().length === 0 ? (
-                /* Empty State */
-                <div className="p-8 text-center">
-                  <div className="w-12 h-12 bg-gray-700/50 rounded-lg flex items-center justify-center mx-auto mb-4">
-                    <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                    </svg>
-                  </div>
-                  <h4 className="text-lg font-semibold text-white mb-2">No items yet</h4>
-                  <p className="text-sm text-gray-400 mb-4">Start by adding your first password</p>
-                  <button className="px-4 py-2 bg-gradient-to-r from-[#F15A24] to-[#ED1E79] text-white text-sm font-medium rounded-lg hover:shadow-lg transition-all duration-200">
-                    Add Item
-                  </button>
-                </div>
-              ) : (
-                /* Items List */
-                <div className="p-2">
-                  {getDisplayItems().map((item) => (
-                    <button
-                      key={item.id}
-                      onClick={() => setSelectedItem(item)}
-                      className={`w-full p-3 rounded-lg mb-2 text-left transition-all duration-200 hover:bg-gray-700/30 ${
-                        selectedItem?.id === item.id ? 'bg-[#F15A24]/10 border border-[#F15A24]/30' : 'hover:bg-gray-700/30'
-                      }`}
-                    >
-                      <div className="flex items-center gap-3">
-                        {/* Item Icon */}
-                        <div className="w-10 h-10 rounded-lg bg-gray-700/50 flex items-center justify-center flex-shrink-0">
-                          {item.type === 'login' && (
-                            <svg className="w-5 h-5 text-[#FBB03B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9v-9m0 9c-5 0-9-4-9-9m9 9c5 0 9-4 9-9m0 9v-9m0 9c-5 0-9-4-9-9" />
-                            </svg>
-                          )}
-                          {item.type === 'card' && (
-                            <svg className="w-5 h-5 text-[#29ABE2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-                            </svg>
-                          )}
-                          {item.type === 'note' && (
-                            <svg className="w-5 h-5 text-[#ED1E79]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                            </svg>
-                          )}
-                        </div>
-
-                        {/* Item Info */}
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 mb-1">
-                            <h4 className="font-medium text-white truncate">{item.title}</h4>
-                            {item.isFavorite && (
-                              <svg className="w-4 h-4 text-[#FBB03B] flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
-                              </svg>
-                            )}
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <p className="text-sm text-gray-400 truncate">
-                              {item.type === 'login' && (item.data as LoginData).username}
-                              {item.type === 'card' && (item.data as CardData).cardholderName}
-                              {item.type === 'note' && 'Secure note'}
-                            </p>
-                            <span className="text-xs text-gray-500 flex-shrink-0 ml-2">
-                              {new Date(item.lastUsed).toLocaleDateString()}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
+          <ItemList
+            items={getDisplayItems()}
+            selectedItem={selectedItem}
+            onSelectItem={(item) => {
+              setSelectedItem(item);
+            }}
+          />
 
           {/* Details Panel */}
           <div className="flex-1 flex flex-col">
